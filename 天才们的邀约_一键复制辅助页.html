@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>⌈天才们的邀约⌋ 辅助答题工具</title>
+  <style>
+    html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;background:#ffffff;color:#000}
+    .wrap{max-width:900px;margin:40px auto;padding:28px;background:#fff;border-radius:12px;border:1px solid #e5e7eb;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+    h1{font-size:20px;margin:0 0 10px;color:#111}
+    p.lead{color:#555;margin:0 0 18px}
+    .card{background:#fafafa;border-radius:10px;padding:14px;margin-bottom:14px;border:1px solid #e5e7eb}
+    .row{display:flex;gap:12px;align-items:center}
+    .mono{font-family:Menlo,Consolas,monospace;background:#f3f4f6;padding:10px;border-radius:8px;overflow:auto;color:#111}
+    button.copybtn{background:#fff;border:1px solid #d1d5db;padding:8px 12px;border-radius:8px;cursor:pointer;color:#111}
+    button.copybtn:hover{background:#f9fafb}
+    .success{color:#059669;margin-left:8px;font-weight:600}
+    pre.codebox{white-space:pre-wrap;margin:8px 0;padding:12px;border-radius:8px;background:#f3f4f6;color:#111}
+    .hint{color:#666;font-size:13px;margin-top:6px}
+    .outline-sample{display:inline-block;padding:6px 10px;border-radius:6px;border:2px solid rgba(16,185,129,0.25);color:#059669;font-weight:600;background:#ecfdf5}
+    footer{color:#666;font-size:13px;margin-top:14px}
+    .big{font-size:15px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>⌈天才们的邀约⌋ 辅助答题工具</h1>
+    <p class="lead">脚本功能：<span class="outline-sample">用绿色描边标出答案方便选择</span></p>
+
+    <div class="card">
+      <strong>如何使用脚本</strong>
+      <div class="hint">方法一：使用 篡改猴(Tampermonkey) 插件。 方法二：打开网站后在控制台粘贴指令（无需插件）。</div>
+    </div>
+
+    <div class="card">
+      <strong class="big">方法一：</strong>
+      <div class="row" style="margin-top:10px;">
+        <div style="flex:1">
+          <div class="mono">https://gh-proxy.org/https://github.com/89156/userjs/raw/refs/heads/main/user.js</div>
+          <div class="hint">使用方法：复制上方链接 → 打开 Tampermonkey 管理面板 → 实用工具 → 从 URL 安装</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <button class="copybtn" data-copy="https://gh-proxy.org/https://github.com/89156/userjs/raw/refs/heads/main/user.js">复制链接</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <strong class="big">方法二：控制台指令</strong>
+      <pre class="codebox mono" id="cmd">fetch("https://gh-proxy.org/https://raw.githubusercontent.com/89156/userjs/refs/heads/main/quiz_highlight.js").then(r=>r.text()).then(eval)</pre>
+      <div style="display:flex;gap:10px;align-items:center;margin-top:6px;">
+        <button class="copybtn" id="copy-run" data-copy="">复制指令</button>
+        <span id="cmsg" class="success" style="display:none">已复制</span>
+      </div>
+      <div class="hint" style="margin-top:10px;">使用方法：进入小游戏页面 → 按 F12 或右键空白点击检查打开开发者工具 → 切换到 Console（控制台） → 粘贴以上指令并回车执行。</div>
+    </div>
+
+    <div class="card">
+      <strong>快速说明</strong>
+      <ul style="margin:8px 0 0 18px;color:#666">
+        <li>脚本效果：在小游戏页面将正确答案用绿色描边标记，便于点击选择。</li>
+        <li>使用 Tampermonkey 时请确保脚本来源可信并检查源码。</li>
+      </ul>
+    </div>
+
+  <script>
+    function showMsg(btn){
+      const msg=document.getElementById('cmsg');
+      msg.style.display='inline-block';
+      msg.textContent='已复制到剪贴板';
+      setTimeout(()=>{msg.style.display='none'},1800);
+      btn.blur();
+    }
+
+    document.querySelectorAll('.copybtn').forEach(btn=>{
+      btn.addEventListener('click',async()=>{
+        const text=btn.getAttribute('data-copy')||'';
+        try{
+          await navigator.clipboard.writeText(text);
+          showMsg(btn);
+        }catch(e){
+          const ta=document.createElement('textarea');
+          ta.value=text;document.body.appendChild(ta);ta.select();
+          try{document.execCommand('copy');showMsg(btn);}catch(err){alert('复制失败，请手动复制：\n'+text);} 
+          document.body.removeChild(ta);
+        }
+      });
+    });
+
+    document.getElementById('copy-run').addEventListener('click',async function(){
+      const cmd=document.getElementById('cmd').textContent.trim();
+      try{
+        await navigator.clipboard.writeText(cmd);
+        showMsg(this);
+      }catch(e){
+        const ta=document.createElement('textarea');
+        ta.value=cmd;document.body.appendChild(ta);ta.select();
+        document.execCommand('copy');document.body.removeChild(ta);
+        showMsg(this);
+      }
+    });
+  </script>
+</body>
+</html>
