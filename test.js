@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 let DB={};
-fetch("https://gh-proxy.org/https://raw.githubusercontent.com/89156/userjs/refs/heads/main/quiz_db.json")
+fetch("https://gh-proxy.org/https://raw.githubusercontent.com/aa1x/userjs/refs/heads/main/quiz_db.json")
 .then(r=>r.json()).then(j=>{
     DB=j;
 
